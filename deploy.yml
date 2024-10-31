@@ -1,1 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  labels:
+    app: myapp
+spec:
+  replicas: 3  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp-container
+        image: yaeshvann/gtech:2
+        ports:
+        - containerPort: 8080  # Port on which the container listens
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  type: NodePort  # Exposing service as NodePort
+  selector:
+    app: myapp  # Selector for pods
+  ports:
+  - port: 8080    # Port exposed by the service
+    targetPort: 8080  # Port on the container to forward traffic to
+    nodePort: 30002  # External port to access the service
